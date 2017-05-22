@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     protected static String TAG = MainActivity.class.getCanonicalName();
@@ -19,11 +20,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        changeToStone = (Button) findViewById(R.id.change_stone_system);
-        changeToStone.setOnClickListener(this);
+        // vamos a obtener una referencia al imageView del offline image
+        final ImageView offlineImage = (ImageView) findViewById(R.id.offline_weather_image);
 
+        // esto es muy raro que lo hagamos, pero te puede ayudar a entender
+        // que son las clases anonimas en realidad
+        changeToStone = (Button) findViewById(R.id.change_stone_system);
+        changeToStone.setOnClickListener(new StoneButtonListener(offlineImage));
+
+        // esto es lo que mas probablemente termines haciendo en tu codigo
         changeToDonkey = (Button) findViewById(R.id.change_donkey_system);
-        changeToDonkey.setOnClickListener(this);
+        changeToDonkey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v(TAG, "Me han pedido burro");
+                offlineImage.setImageResource(R.drawable.offline_weather2);
+            }
+        });
 
         Log.v(TAG, "Hola Amundio, he pasado por OnCreate");
     }
@@ -63,5 +76,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            Log.v(TAG, "No se que me han pedido");
 //        }
 
+    }
+}
+
+class StoneButtonListener implements View.OnClickListener {
+    private final ImageView offlineImage;
+
+    public StoneButtonListener(ImageView offlineImage) {
+        this.offlineImage = offlineImage;
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        Log.v("Lo que sea", "Me han pedido piedra");
     }
 }
