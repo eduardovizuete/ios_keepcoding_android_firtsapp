@@ -3,4 +3,8 @@
     <string name="change_stone_system">Cambiar a Sistema Piedra</string>
     <string name="change_donkey_system">Cambiar a Sistema Burro</string>
     <string name="offline_weather_content_description">Imagen para saber el tiempo que hace</string>
+    <string name="imagen_default_description">Imagen default</string>
+    <string name="max_temp_format">Temp. máxima: %.2fº</string>
+    <string name="min_temp_format">Temp. mínima: %.2fº</string>
+    <string name="hunidity_format">Humedad: %.0f%%</string>
 </resources>

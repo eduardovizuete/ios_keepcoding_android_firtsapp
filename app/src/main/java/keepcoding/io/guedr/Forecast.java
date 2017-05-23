@@ -1,35 +1,34 @@
 package keepcoding.io.guedr;
 
 public class Forecast {
-    private float nMaxTemp;
-    private float nMinTemp;
+    private float mMaxTemp;
+    private float mMinTemp;
     private float mHumidity;
     private String mDescription;
     private int mIcon;
 
-
-    public Forecast(float nMaxTemp, float nMinTemp, float mHumidity, String mDescription, int mIcon) {
-        this.nMaxTemp = nMaxTemp;
-        this.nMinTemp = nMinTemp;
-        this.mHumidity = mHumidity;
-        this.mDescription = mDescription;
-        this.mIcon = mIcon;
+    public Forecast(float maxTemp, float minTemp, float humidity, String description, int icon) {
+        mMaxTemp = maxTemp;
+        mMinTemp = minTemp;
+        mHumidity = humidity;
+        mDescription = description;
+        mIcon = icon;
     }
 
     public float getMaxTemp() {
-        return nMaxTemp;
+        return mMaxTemp;
     }
 
     public void setMaxTemp(float maxTemp) {
-        this.nMaxTemp = maxTemp;
+        mMaxTemp = maxTemp;
     }
 
     public float getMinTemp() {
-        return nMinTemp;
+        return mMinTemp;
     }
 
     public void setMinTemp(float minTemp) {
-        this.nMinTemp = minTemp;
+        mMinTemp = minTemp;
     }
 
     public float getHumidity() {
@@ -37,7 +36,7 @@ public class Forecast {
     }
 
     public void setHumidity(float humidity) {
-        this.mHumidity = humidity;
+        mHumidity = humidity;
     }
 
     public String getDescription() {
@@ -45,7 +44,7 @@ public class Forecast {
     }
 
     public void setDescription(String description) {
-        this.mDescription = description;
+        mDescription = description;
     }
 
     public int getIcon() {
@@ -53,6 +52,6 @@ public class Forecast {
     }
 
     public void setIcon(int icon) {
-        this.mIcon = icon;
+        mIcon = icon;
     }
 }
