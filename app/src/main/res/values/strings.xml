@@ -7,4 +7,7 @@
     <string name="max_temp_format">Temp. máxima: %.2fº</string>
     <string name="min_temp_format">Temp. mínima: %.2fº</string>
     <string name="hunidity_format">Humedad: %.0f%%</string>
+    <string name="farenheit_units">Unidades Farenheit</string>
+    <string name="celsius_units">Unidades Celsius</string>
+    <string name="settings">Ajustes</string>
 </resources>
