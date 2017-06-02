@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import keepcoding.io.guedr.R;
 import keepcoding.io.guedr.activity.SettingsActivity;
+import keepcoding.io.guedr.model.City;
 import keepcoding.io.guedr.model.Forecast;
 
 public class ForecastFragment extends Fragment {
@@ -26,6 +27,8 @@ public class ForecastFragment extends Fragment {
     public static final String PREFERENCE_SHOW_CELSIUS = "showCelsius";
 
     protected static String TAG = ForecastFragment.class.getCanonicalName();
+    public static final String ARG_CITY = "city";
+
     private static final int ID_OPCION_1 = 1;
     private static final int ID_OPCION_2 = 2;
 
@@ -48,7 +51,11 @@ public class ForecastFragment extends Fragment {
         mRoot = inflater.inflate(R.layout.fragment_forecast, container, false);
 
         // creamos el modelo de pega
-        mForecast = new Forecast(25, 10, 35, "Soleado con alguna nube", R.drawable.ico_01);
+        // mForecast = new Forecast(25, 10, 35, "Soleado con alguna nube", R.drawable.ico_01);
+
+        // recuperamos el modelo que nos pasen como argumento
+        City city = (City) getArguments().getSerializable(ARG_CITY);
+        mForecast = city.getForecast();
 
         // recuperamos el valor que habiamos guardado para mShowCelsius en disco
         mShowCelsius = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(PREFERENCE_SHOW_CELSIUS, true);

@@ -47,6 +47,10 @@ class CityPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         ForecastFragment fragment = new ForecastFragment();
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(ForecastFragment.ARG_CITY, mCities.getCity(position));
+        fragment.setArguments(arguments);
+
         return fragment;
     }
 
