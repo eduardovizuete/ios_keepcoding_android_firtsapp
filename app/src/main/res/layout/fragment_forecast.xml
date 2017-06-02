@@ -16,6 +16,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         tools:text="Madrid"
         />

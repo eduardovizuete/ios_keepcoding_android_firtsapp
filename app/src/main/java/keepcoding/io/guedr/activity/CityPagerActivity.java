@@ -12,6 +12,7 @@ import keepcoding.io.guedr.R;
 import keepcoding.io.guedr.fragment.ForecastFragment;
 import keepcoding.io.guedr.model.Cities;
 import keepcoding.io.guedr.model.City;
+import keepcoding.io.guedr.model.Forecast;
 
 public class CityPagerActivity extends AppCompatActivity {
 
@@ -46,10 +47,7 @@ class CityPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        ForecastFragment fragment = new ForecastFragment();
-        Bundle arguments = new Bundle();
-        arguments.putSerializable(ForecastFragment.ARG_CITY, mCities.getCity(position));
-        fragment.setArguments(arguments);
+        ForecastFragment fragment = ForecastFragment.newInstance(mCities.getCity(position));
 
         return fragment;
     }

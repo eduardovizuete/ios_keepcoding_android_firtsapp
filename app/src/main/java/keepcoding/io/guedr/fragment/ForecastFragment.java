@@ -27,21 +27,36 @@ public class ForecastFragment extends Fragment {
     public static final String PREFERENCE_SHOW_CELSIUS = "showCelsius";
 
     protected static String TAG = ForecastFragment.class.getCanonicalName();
-    public static final String ARG_CITY = "city";
 
     private static final int ID_OPCION_1 = 1;
     private static final int ID_OPCION_2 = 2;
 
+    private static final String ARG_CITY = "city";
     private static final int REQUEST_UNITS = 1;
     protected boolean mShowCelsius = true;
-    private Forecast mForecast;
+    private City mCity;
     private View mRoot;
+
+    public static ForecastFragment newInstance(City city) {
+        ForecastFragment fragment = new ForecastFragment();
+
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(ARG_CITY, city);
+        fragment.setArguments(arguments);
+
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
+
+        if (getArguments() != null) {
+            // recuperamos el modelo que nos pasen como argumento
+            mCity = (City) getArguments().getSerializable(ARG_CITY);
+        }
     }
 
     @Nullable
@@ -49,13 +64,6 @@ public class ForecastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mRoot = inflater.inflate(R.layout.fragment_forecast, container, false);
-
-        // creamos el modelo de pega
-        // mForecast = new Forecast(25, 10, 35, "Soleado con alguna nube", R.drawable.ico_01);
-
-        // recuperamos el modelo que nos pasen como argumento
-        City city = (City) getArguments().getSerializable(ARG_CITY);
-        mForecast = city.getForecast();
 
         // recuperamos el valor que habiamos guardado para mShowCelsius en disco
         mShowCelsius = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(PREFERENCE_SHOW_CELSIUS, true);
@@ -67,32 +75,39 @@ public class ForecastFragment extends Fragment {
 
     private void updateForecast() {
         // accedemos a las vistas de la interfaz
+        TextView cityName = (TextView) mRoot.findViewById(R.id.city);
         ImageView forecastImage = (ImageView) mRoot.findViewById(R.id.forecast_image);
         TextView maxTempText = (TextView) mRoot.findViewById(R.id.max_temp);
         TextView minTempText = (TextView) mRoot.findViewById(R.id.min_temp);
         TextView humidityText = (TextView) mRoot.findViewById(R.id.humidity);
         TextView forecastDescription = (TextView) mRoot.findViewById(R.id.forecast_description);
 
+        // establecemos el nombre de la ciudad
+        cityName.setText(mCity.getName());
+
+        // Accedemos al modelo
+        Forecast forecast = mCity.getForecast();
+
         // calculamos las temperaturas en funcion de las unidades
         float maxTemp = 0;
         float minTemp = 0;
         String unitsToShow = null;
         if (mShowCelsius) {
-            maxTemp = mForecast.getMaxTemp(Forecast.CELSIUS);
-            minTemp = mForecast.getMinTemp(Forecast.CELSIUS);
+            maxTemp = forecast.getMaxTemp(Forecast.CELSIUS);
+            minTemp = forecast.getMinTemp(Forecast.CELSIUS);
             unitsToShow = "ºC";
         } else {
-            maxTemp = mForecast.getMaxTemp(Forecast.FARENHEIT);
-            minTemp = mForecast.getMinTemp(Forecast.FARENHEIT);
+            maxTemp = forecast.getMaxTemp(Forecast.FARENHEIT);
+            minTemp = forecast.getMinTemp(Forecast.FARENHEIT);
             unitsToShow = "F";
         }
 
         // Actualizamos la vista con el modelo
-        forecastImage.setImageResource(mForecast.getIcon());
+        forecastImage.setImageResource(forecast.getIcon());
         maxTempText.setText(getString(R.string.max_temp_format, maxTemp, unitsToShow));
         minTempText.setText(getString(R.string.min_temp_format, minTemp, unitsToShow));
-        humidityText.setText(getString(R.string.hunidity_format, mForecast.getHumidity()));
-        forecastDescription.setText(mForecast.getDescription());
+        humidityText.setText(getString(R.string.hunidity_format, forecast.getHumidity()));
+        forecastDescription.setText(forecast.getDescription());
     }
 
     @Override
