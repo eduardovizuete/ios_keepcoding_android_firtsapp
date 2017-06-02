@@ -1,4 +1,4 @@
-package keepcoding.io.guedr;
+package keepcoding.io.guedr.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioGroup;
+
+import keepcoding.io.guedr.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

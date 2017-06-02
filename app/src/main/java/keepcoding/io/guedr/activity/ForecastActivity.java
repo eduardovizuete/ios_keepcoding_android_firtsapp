@@ -1,7 +1,9 @@
-package keepcoding.io.guedr;
+package keepcoding.io.guedr.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import keepcoding.io.guedr.R;
 
 public class ForecastActivity extends AppCompatActivity {
 

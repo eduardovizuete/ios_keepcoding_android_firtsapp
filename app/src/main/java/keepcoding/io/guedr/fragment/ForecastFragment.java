@@ -1,4 +1,4 @@
-package keepcoding.io.guedr;
+package keepcoding.io.guedr.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -16,6 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import keepcoding.io.guedr.R;
+import keepcoding.io.guedr.activity.SettingsActivity;
+import keepcoding.io.guedr.model.Forecast;
 
 public class ForecastFragment extends Fragment {
 

@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="keepcoding.io.guedr.ForecastActivity"
+    tools:context="keepcoding.io.guedr.activity.ForecastActivity"
     >
 
     <fragment
         android:id="@+id/forecast_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="keepcoding.io.guedr.ForecastFragment" />
+        android:name="keepcoding.io.guedr.fragment.ForecastFragment" />
 
 </FrameLayout>

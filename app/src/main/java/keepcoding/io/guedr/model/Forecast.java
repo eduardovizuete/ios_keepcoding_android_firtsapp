@@ -1,4 +1,4 @@
-package keepcoding.io.guedr;
+package keepcoding.io.guedr.model;
 
 public class Forecast {
 
