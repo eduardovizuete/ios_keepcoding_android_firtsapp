@@ -20,6 +20,10 @@ public class Cities {
         return mCities.get(index);
     }
 
+    public LinkedList<City> getCities() {
+        return mCities;
+    }
+
     public int getCount() {
         return mCities.size();
     }
