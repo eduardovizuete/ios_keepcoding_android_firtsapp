@@ -54,7 +54,7 @@ public class CityPagerFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_city_pager, container, false);
 
         mPager = (ViewPager) root.findViewById(R.id.view_pager);
-        mCities = new Cities();
+        mCities = Cities.getInstance();
         CityPagerAdapter adapter = new CityPagerAdapter(getFragmentManager(), mCities);
 
         // le damos al viewpager su adapter para que muestre tantos fragments como diga el modelo

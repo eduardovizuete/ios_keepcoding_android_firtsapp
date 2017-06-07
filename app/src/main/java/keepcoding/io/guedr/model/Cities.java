@@ -7,7 +7,18 @@ import keepcoding.io.guedr.R;
 
 public class Cities {
 
+    private static Cities mInstance;
+
     private LinkedList<City> mCities;
+
+    public static Cities getInstance() {
+        if (mInstance == null) {
+            // no existe una instancia estatica de la clase, la creo
+            mInstance = new Cities();
+        }
+
+        return mInstance;
+    }
 
     public Cities() {
         mCities = new LinkedList<>();
