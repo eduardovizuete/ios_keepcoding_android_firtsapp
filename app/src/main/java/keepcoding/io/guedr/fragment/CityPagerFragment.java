@@ -84,7 +84,7 @@ public class CityPagerFragment extends Fragment {
         return root;
     }
 
-    private void moveToCity(int cityIndex) {
+    public void moveToCity(int cityIndex) {
         mPager.setCurrentItem(cityIndex);
     }
 
