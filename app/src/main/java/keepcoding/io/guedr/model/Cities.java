@@ -22,9 +22,9 @@ public class Cities {
 
     public Cities() {
         mCities = new LinkedList<>();
-        mCities.add(new City("Madrid", new Forecast(25, 10, 35, "Soleado con alguna nube", R.drawable.ico_02)));
-        mCities.add(new City("Jaén", new Forecast(36, 23, 19, "Sol a tope", R.drawable.ico_01)));
-        mCities.add(new City("Quito", new Forecast(30, 15, 40, "Arcoiris", R.drawable.ico_10)));
+        mCities.add(new City("Madrid"));
+        mCities.add(new City("Jaén"));
+        mCities.add(new City("Quito"));
     }
 
     public City getCity(int index) {
