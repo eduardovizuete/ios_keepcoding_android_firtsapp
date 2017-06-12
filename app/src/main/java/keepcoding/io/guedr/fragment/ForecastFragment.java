@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,6 +42,9 @@ public class ForecastFragment extends Fragment {
 
     private static final String ARG_CITY = "city";
     private static final int REQUEST_UNITS = 1;
+    private static final int LOADING_VIEW_INDEX = 0;
+    private static final int FORECAST_VIEW_INDEX = 1;
+
     protected boolean mShowCelsius = true;
     private City mCity;
     private View mRoot;
@@ -96,11 +100,34 @@ public class ForecastFragment extends Fragment {
         // Accedemos al modelo
         Forecast forecast = mCity.getForecast();
 
+        // accedemos al viewSwitcher
+        final ViewSwitcher viewSwitcher = (ViewSwitcher) mRoot.findViewById(R.id.view_switcher);
+        viewSwitcher.setInAnimation(getActivity(), android.R.anim.fade_in);
+        viewSwitcher.setOutAnimation(getActivity(), android.R.anim.fade_out);
+
         if (forecast == null) {
             AsyncTask<City, Integer, Forecast> weatherDownloader = new AsyncTask<City, Integer, Forecast>() {
                 @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+
+                    viewSwitcher.setDisplayedChild(LOADING_VIEW_INDEX); // mostramos el progressbar
+                }
+
+                @Override
                 protected Forecast doInBackground(City... params) {
+                    publishProgress(50);
                     return downloadForecast(params[0]);
+                }
+
+                @Override
+                protected void onProgressUpdate(Integer... values) {
+                    super.onProgressUpdate(values);
+                }
+
+                @Override
+                protected void onCancelled(Forecast forecast) {
+                    super.onCancelled();
                 }
 
                 @Override
@@ -111,6 +138,8 @@ public class ForecastFragment extends Fragment {
                         mCity.setForecast(forecast);
 
                         updateForecast();
+
+                        viewSwitcher.setDisplayedChild(FORECAST_VIEW_INDEX);
                     }
                 }
             };
@@ -185,6 +214,8 @@ public class ForecastFragment extends Fragment {
                 case 13: iconResource = R.drawable.ico_13; break;
                 case 50: iconResource = R.drawable.ico_50; break;
             }
+
+            Thread.sleep(5000);
 
             return new Forecast(max, min, humidity, description, iconResource);
         } catch (Exception ex) {
