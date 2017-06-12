@@ -1,7 +1,9 @@
 package keepcoding.io.guedr.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -140,6 +142,18 @@ public class ForecastFragment extends Fragment {
                         updateForecast();
 
                         viewSwitcher.setDisplayedChild(FORECAST_VIEW_INDEX);
+                    } else {
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+                        alertDialog.setTitle(R.string.error);
+                        alertDialog.setMessage(R.string.couldnt_download_weather);
+                        alertDialog.setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                updateForecast();
+                            }
+                        });
+
+                        alertDialog.show();
                     }
                 }
             };
