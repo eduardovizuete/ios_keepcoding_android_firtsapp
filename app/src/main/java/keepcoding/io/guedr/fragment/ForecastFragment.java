@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,9 +30,11 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.LinkedList;
 
 import keepcoding.io.guedr.R;
 import keepcoding.io.guedr.activity.SettingsActivity;
+import keepcoding.io.guedr.adapter.ForecasteRecyclerViewAdapter;
 import keepcoding.io.guedr.model.City;
 import keepcoding.io.guedr.model.Forecast;
 
@@ -50,6 +55,7 @@ public class ForecastFragment extends Fragment {
     protected boolean mShowCelsius = true;
     private City mCity;
     private View mRoot;
+    private RecyclerView mList;
 
     public static ForecastFragment newInstance(City city) {
         ForecastFragment fragment = new ForecastFragment();
@@ -82,25 +88,27 @@ public class ForecastFragment extends Fragment {
         // recuperamos el valor que habiamos guardado para mShowCelsius en disco
         mShowCelsius = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(PREFERENCE_SHOW_CELSIUS, true);
 
+        // accedemos al RecyclerView con findViewById
+        mList = (RecyclerView) mRoot.findViewById(R.id.forecast_list);
+
+        // le decimos como debe visualizar el RecyclerView (su LayoutManager)
+        mList.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        // le decimos como debe animarse el RecyclerView
+        mList.setItemAnimator(new DefaultItemAnimator());
+
+        // por ultimo, un RecyclerView necesita un adapter
+        // esto lo haremos en updateForecast
+
         updateForecast();
 
         return mRoot;
     }
 
     private void updateForecast() {
-        // accedemos a las vistas de la interfaz
-        TextView cityName = (TextView) mRoot.findViewById(R.id.city);
-        ImageView forecastImage = (ImageView) mRoot.findViewById(R.id.forecast_image);
-        TextView maxTempText = (TextView) mRoot.findViewById(R.id.max_temp);
-        TextView minTempText = (TextView) mRoot.findViewById(R.id.min_temp);
-        TextView humidityText = (TextView) mRoot.findViewById(R.id.humidity);
-        TextView forecastDescription = (TextView) mRoot.findViewById(R.id.forecast_description);
-
-        // establecemos el nombre de la ciudad
-        cityName.setText(mCity.getName());
 
         // Accedemos al modelo
-        Forecast forecast = mCity.getForecast();
+        LinkedList<Forecast> forecast = mCity.getForecast();
 
         // accedemos al viewSwitcher
         final ViewSwitcher viewSwitcher = (ViewSwitcher) mRoot.findViewById(R.id.view_switcher);
@@ -108,7 +116,7 @@ public class ForecastFragment extends Fragment {
         viewSwitcher.setOutAnimation(getActivity(), android.R.anim.fade_out);
 
         if (forecast == null) {
-            AsyncTask<City, Integer, Forecast> weatherDownloader = new AsyncTask<City, Integer, Forecast>() {
+            AsyncTask<City, Integer, LinkedList<Forecast>> weatherDownloader = new AsyncTask<City, Integer, LinkedList<Forecast>>() {
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
@@ -117,7 +125,7 @@ public class ForecastFragment extends Fragment {
                 }
 
                 @Override
-                protected Forecast doInBackground(City... params) {
+                protected LinkedList<Forecast> doInBackground(City... params) {
                     publishProgress(50);
                     return downloadForecast(params[0]);
                 }
@@ -128,12 +136,12 @@ public class ForecastFragment extends Fragment {
                 }
 
                 @Override
-                protected void onCancelled(Forecast forecast) {
+                protected void onCancelled(LinkedList<Forecast> forecast) {
                     super.onCancelled();
                 }
 
                 @Override
-                protected void onPostExecute(Forecast forecast) {
+                protected void onPostExecute(LinkedList<Forecast> forecast) {
 
                     if (forecast != null) {
                         // no ha habido errores descargando la informacion del tiempo, actualizo la interfaz
@@ -163,29 +171,12 @@ public class ForecastFragment extends Fragment {
             return;
         }
 
-        // calculamos las temperaturas en funcion de las unidades
-        float maxTemp = 0;
-        float minTemp = 0;
-        String unitsToShow = null;
-        if (mShowCelsius) {
-            maxTemp = forecast.getMaxTemp(Forecast.CELSIUS);
-            minTemp = forecast.getMinTemp(Forecast.CELSIUS);
-            unitsToShow = "ºC";
-        } else {
-            maxTemp = forecast.getMaxTemp(Forecast.FARENHEIT);
-            minTemp = forecast.getMinTemp(Forecast.FARENHEIT);
-            unitsToShow = "F";
-        }
-
-        // Actualizamos la vista con el modelo
-        forecastImage.setImageResource(forecast.getIcon());
-        maxTempText.setText(getString(R.string.max_temp_format, maxTemp, unitsToShow));
-        minTempText.setText(getString(R.string.min_temp_format, minTemp, unitsToShow));
-        humidityText.setText(getString(R.string.hunidity_format, forecast.getHumidity()));
-        forecastDescription.setText(forecast.getDescription());
+        // asignamos el adapter al RecyclerView
+        ForecasteRecyclerViewAdapter adapter = new ForecasteRecyclerViewAdapter(forecast, mShowCelsius);
+        mList.setAdapter(adapter);
     }
 
-    private Forecast downloadForecast(City city) {
+    private LinkedList<Forecast> downloadForecast(City city) {
         URL url = null;
         InputStream input = null;
 
@@ -205,33 +196,42 @@ public class ForecastFragment extends Fragment {
             // Analizamos los datos para convertirlos de JSON a algo que podamos manejar en codigo
             JSONObject jsonRoot = new JSONObject(sb.toString());
             JSONArray list = jsonRoot.getJSONArray("list");
-            JSONObject today = list.getJSONObject(0);
-            float max = (float) today.getJSONObject("temp").getDouble("max");
-            float min = (float) today.getJSONObject("temp").getDouble("min");
-            float humidity = (float) today.getDouble("humidity");
-            String description = today.getJSONArray("weather").getJSONObject(0).getString("description");
-            String iconString = today.getJSONArray("weather").getJSONObject(0).getString("icon");
 
-            // convertimos el texto iconString a drawable
-            iconString = iconString.substring(0, iconString.length() - 1);
-            int iconInt = Integer.parseInt(iconString);
-            int iconResource = R.drawable.ico_01;
+            // nos descargamos todos los dias de la prediccion
+            LinkedList<Forecast> forecasts = new LinkedList<>();
 
-            switch (iconInt) {
-                case 1: iconResource = R.drawable.ico_01; break;
-                case 2: iconResource = R.drawable.ico_02; break;
-                case 3: iconResource = R.drawable.ico_03; break;
-                case 4: iconResource = R.drawable.ico_04; break;
-                case 9: iconResource = R.drawable.ico_09; break;
-                case 10: iconResource = R.drawable.ico_10; break;
-                case 11: iconResource = R.drawable.ico_11; break;
-                case 13: iconResource = R.drawable.ico_13; break;
-                case 50: iconResource = R.drawable.ico_50; break;
+            for (int i = 0; i < list.length(); i++) {
+                JSONObject today = list.getJSONObject(i);
+                float max = (float) today.getJSONObject("temp").getDouble("max");
+                float min = (float) today.getJSONObject("temp").getDouble("min");
+                float humidity = (float) today.getDouble("humidity");
+                String description = today.getJSONArray("weather").getJSONObject(0).getString("description");
+                String iconString = today.getJSONArray("weather").getJSONObject(0).getString("icon");
+
+                // convertimos el texto iconString a drawable
+                iconString = iconString.substring(0, iconString.length() - 1);
+                int iconInt = Integer.parseInt(iconString);
+                int iconResource = R.drawable.ico_01;
+
+                switch (iconInt) {
+                    case 1: iconResource = R.drawable.ico_01; break;
+                    case 2: iconResource = R.drawable.ico_02; break;
+                    case 3: iconResource = R.drawable.ico_03; break;
+                    case 4: iconResource = R.drawable.ico_04; break;
+                    case 9: iconResource = R.drawable.ico_09; break;
+                    case 10: iconResource = R.drawable.ico_10; break;
+                    case 11: iconResource = R.drawable.ico_11; break;
+                    case 13: iconResource = R.drawable.ico_13; break;
+                    case 50: iconResource = R.drawable.ico_50; break;
+                }
+
+                Forecast forecast = new Forecast(max, min, humidity, description, iconResource);
+                forecasts.add(forecast);
             }
 
-            Thread.sleep(5000);
+            Thread.sleep(2000);
 
-            return new Forecast(max, min, humidity, description, iconResource);
+            return forecasts;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
