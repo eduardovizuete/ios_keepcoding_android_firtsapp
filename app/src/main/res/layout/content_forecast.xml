@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/default_margin"
+    app:cardElevation="@dimen/default_card_elevation"
+    app:cardCornerRadius="@dimen/default_card_corner_radius"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="keepcoding.io.guedr.fragment.ForecastFragment">
+
+        <TextView
+            android:id="@+id/city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            tools:text="Madrid"
+            />
+
+        <ImageView
+            android:id="@+id/forecast_image"
+            android:layout_width="wrap_content"
+            android:maxWidth="@dimen/forecast_image_max_width"
+            android:adjustViewBounds="true"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/city"
+            android:contentDescription="@string/imagen_default_description"
+            app:srcCompat="@drawable/ico_02"/>
+
+        <LinearLayout
+            android:id="@+id/forecast_information"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/forecast_information_min_height"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/forecast_image"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_toRightOf="@+id/forecast_image"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/max_temp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Temperatura maxima"/>
+
+            <TextView
+                android:id="@+id/min_temp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Temperatura minima"
+                />
+
+            <TextView
+                android:id="@+id/humidity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Humedad"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/forecast_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/forecast_information"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            tools:text="Forecast description"/>
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
