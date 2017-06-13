@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -92,7 +93,8 @@ public class ForecastFragment extends Fragment {
         mList = (RecyclerView) mRoot.findViewById(R.id.forecast_list);
 
         // le decimos como debe visualizar el RecyclerView (su LayoutManager)
-        mList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //mList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mList.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.recycler_columns)));
 
         // le decimos como debe animarse el RecyclerView
         mList.setItemAnimator(new DefaultItemAnimator());
