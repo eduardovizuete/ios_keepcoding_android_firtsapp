@@ -13,7 +13,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,8 +21,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import org.json.JSONArray;
@@ -46,9 +43,6 @@ public class ForecastFragment extends Fragment {
     public static final String PREFERENCE_SHOW_CELSIUS = "showCelsius";
 
     protected static String TAG = ForecastFragment.class.getCanonicalName();
-
-    private static final int ID_OPCION_1 = 1;
-    private static final int ID_OPCION_2 = 2;
 
     private static final String ARG_CITY = "city";
     private static final int REQUEST_UNITS = 1;
@@ -152,8 +146,6 @@ public class ForecastFragment extends Fragment {
                         mCity.setForecast(forecast);
 
                         updateForecast();
-
-                        viewSwitcher.setDisplayedChild(FORECAST_VIEW_INDEX);
                     } else {
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
                         alertDialog.setTitle(R.string.error);
@@ -174,6 +166,8 @@ public class ForecastFragment extends Fragment {
 
             return;
         }
+
+        viewSwitcher.setDisplayedChild(FORECAST_VIEW_INDEX);
 
         // asignamos el adapter al RecyclerView
         ForecasteRecyclerViewAdapter adapter = new ForecasteRecyclerViewAdapter(forecast, mShowCelsius);
@@ -201,8 +195,8 @@ public class ForecastFragment extends Fragment {
     }
 
     private LinkedList<Forecast> downloadForecast(City city) {
-        URL url = null;
-        InputStream input = null;
+        URL url;
+        InputStream input;
 
         try {
             // nos descargamos la informacion del tiempo a machete
@@ -307,9 +301,9 @@ public class ForecastFragment extends Fragment {
             // miro como ha ido el resultado
             if (resultCode == Activity.RESULT_OK) {
                 final boolean oldShowCelsius = mShowCelsius; // por si acaso el usuario se arrepiente
-                String snackBarText = null;
+                String snackBarText;
 
-                // todo ha ido bien, hago caso a los datos de entrada
+                // ha ido bien, hago caso a los datos de entrada
                 // (la opcion por defecto aqui es absurda... pero hay que rellenarla)
                 int optionSelected = data.getIntExtra(SettingsActivity.EXTRA_UNITS, R.id.farenheit_rb);
                 if (optionSelected == R.id.farenheit_rb) {
