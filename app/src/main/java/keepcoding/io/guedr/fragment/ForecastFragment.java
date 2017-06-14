@@ -34,6 +34,7 @@ import java.net.URL;
 import java.util.LinkedList;
 
 import keepcoding.io.guedr.R;
+import keepcoding.io.guedr.activity.DetailActivity;
 import keepcoding.io.guedr.activity.SettingsActivity;
 import keepcoding.io.guedr.adapter.ForecasteRecyclerViewAdapter;
 import keepcoding.io.guedr.model.City;
@@ -110,7 +111,7 @@ public class ForecastFragment extends Fragment {
     private void updateForecast() {
 
         // Accedemos al modelo
-        LinkedList<Forecast> forecast = mCity.getForecast();
+        final LinkedList<Forecast> forecast = mCity.getForecast();
 
         // accedemos al viewSwitcher
         final ViewSwitcher viewSwitcher = (ViewSwitcher) mRoot.findViewById(R.id.view_switcher);
@@ -175,6 +176,21 @@ public class ForecastFragment extends Fragment {
 
         // asignamos el adapter al RecyclerView
         ForecasteRecyclerViewAdapter adapter = new ForecasteRecyclerViewAdapter(forecast, mShowCelsius);
+
+        // nos suscribimos a las pulsaciones de las tarjetas del RecyclerView
+        adapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = mList.getChildAdapterPosition(v);
+                Forecast forecastDetail = forecast.get(position);
+
+                // lanzamos la actividad de detalle (ojo, esto seria mejor lanzarlo desde la actividad
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra(DetailActivity.EXTRA_FORECAST, forecastDetail);
+                intent.putExtra(DetailActivity.EXTRA_SHOWCELSIUS, mShowCelsius);
+                startActivity(intent);
+            }
+        });
         mList.setAdapter(adapter);
     }
 

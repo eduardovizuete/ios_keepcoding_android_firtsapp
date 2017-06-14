@@ -17,6 +17,7 @@ public class ForecasteRecyclerViewAdapter extends RecyclerView.Adapter<Forecaste
 
     private LinkedList<Forecast> mForecasts;
     private boolean mShowCelsius;
+    private View.OnClickListener mOnClickListener;
 
     public ForecasteRecyclerViewAdapter(LinkedList<Forecast> forecast, boolean showCelsius) {
         super();
@@ -24,9 +25,14 @@ public class ForecasteRecyclerViewAdapter extends RecyclerView.Adapter<Forecaste
         mShowCelsius = showCelsius;
     }
 
+    public void setOnClickListener(View.OnClickListener onClickListener) {
+        mOnClickListener = onClickListener;
+    }
+
     @Override
     public ForecastViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_forecast, parent, false);
+        view.setOnClickListener(mOnClickListener);
         return new ForecastViewHolder(view);
     }
 
